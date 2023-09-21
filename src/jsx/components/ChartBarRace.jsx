@@ -13,6 +13,9 @@ import highchartsAccessibility from 'highcharts/modules/accessibility';
 import highchartsExporting from 'highcharts/modules/exporting';
 import highchartsExportData from 'highcharts/modules/export-data';
 
+// https://d3js.org/
+import * as d3 from 'd3';
+
 // Load helpers.
 import countryCodes from '../helpers/CountryCodes.js';
 import formatNr from '../helpers/FormatNr.js';
@@ -25,7 +28,7 @@ Highcharts.setOptions({
   lang: {
     decimalPoint: '.',
     downloadCSV: 'Download CSV data',
-    thousandsSep: ' '
+    thousandsSep: ','
   }
 });
 Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
@@ -56,9 +59,9 @@ Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
   // Add animated textSetter, just like fill/strokeSetters
   // eslint-disable-next-line
   H.Fx.prototype.textSetter = function () {
-    let startValue = this.start.replace(/ /g, '');
-    let endValue = this.end.replace(/ /g, '');
-    let currentValue = this.end.replace(/ /g, '');
+    let startValue = this.start.replace(/,/g, '');
+    let endValue = this.end.replace(/,/g, '');
+    let currentValue = this.end.replace(/,/g, '');
 
     if ((startValue || '').match(FLOAT)) {
       startValue = parseInt(startValue, 10);
@@ -122,8 +125,8 @@ function BarRaceChart({
   const chartRef = useRef();
   const startYear = 1980;
   const endYear = 2023;
-  const btn = document.getElementsByClassName('play-pause-button')[0];
-  const input = document.getElementsByClassName('play-range')[0];
+  const btn = document.getElementsByClassName('play_pause_button')[0];
+  const input = document.getElementsByClassName('play_range')[0];
   const nbr = 15;
   const chart = useRef();
   const [rangeValue, setRangeValue] = useState(0);
@@ -143,20 +146,39 @@ function BarRaceChart({
     return `<div class="year">${input.value}</div><div class="total">Total: ${formatNr(total)} tonnes</div>`;
   }, [getData, input]);
 
+  const xScale = d3.scaleLinear()
+    .range([0, 230])
+    .domain([0, 43]);
+  const yScale = d3.scaleLinear()
+    .range([40, 2])
+    .domain([600000, 2300000]);
+
+  const updateLineChart = useCallback((year_idx) => {
+    const tmp = [];
+    for (let i = startYear; i <= (parseInt(year_idx, 10)); i++) {
+      tmp.push(data[0].data[i - startYear].value);
+    }
+    const line = d3.line()
+      .x((d, i) => xScale(i))
+      .y(d => yScale(d));
+    d3.select('.line_1').attr('d', line(tmp));
+  }, [data, xScale, yScale]);
+
   const pause = () => {
     btn.title = 'play';
-    btn.className = 'fa fa-play  play-pause-button';
+    btn.className = 'fa fa-play  play_pause_button';
     clearTimeout(chart.current.sequenceTimer);
     chart.current.sequenceTimer = undefined;
   };
 
   const updateChart = (year_idx) => {
-    document.getElementsByClassName('meta_data')[0].innerHTML = getSubtitle();
+    document.querySelectorAll('.meta_data .values')[0].innerHTML = getSubtitle();
 
     chart.current.series[0].update({
       name: year_idx,
       data: getData(year_idx)[1]
     });
+    updateLineChart(year_idx);
   };
 
   const update = (increment) => {
@@ -166,12 +188,13 @@ function BarRaceChart({
     if (input.value >= endYear) {
       pause(btn);
     }
+    setRangeValue(input.value);
     updateChart(input.value);
   };
 
   const play = () => {
     btn.title = 'pause';
-    btn.className = 'fa fa-pause  play-pause-button';
+    btn.className = 'fa fa-pause  play_pause_button';
     chart.current.sequenceTimer = setInterval(() => {
       update(1);
     }, 500);
@@ -280,18 +303,18 @@ function BarRaceChart({
             enabled: true,
             style: {
               fontWeight: 600,
-              fontSize: 13
+              fontSize: 17
             },
-            y: 6
+            y: 8
           }, {
             enabled: true,
             format: '{point.name}',
             style: {
               fontWeight: 'normal',
-              opacity: 0.7,
-              fontSize: 12
+              color: '#222',
+              fontSize: 15
             },
-            y: -8
+            y: -10
           }]
         }
       },
@@ -433,21 +456,34 @@ function BarRaceChart({
     if (isVisible === true) {
       setTimeout(() => {
         createChart();
-        document.getElementsByClassName('meta_data')[0].innerHTML = getSubtitle();
+        document.querySelectorAll('.meta_data .values')[0].innerHTML = getSubtitle();
+        const svg_container = d3.select('.line_chart')
+          .append('svg');
+
+        const line_container = svg_container.append('g')
+          .attr('class', 'line_container')
+          .attr('transform', 'translate(0, 0)');
+        // Add the lines.
+        line_container.append('path')
+          .attr('class', 'line line_1')
+          .data([]);
       }, 300);
     }
   }, [createChart, getSubtitle, isVisible]);
 
   return (
     <div className="chart_container" style={{ minHeight: chart_height, maxWidth: '700px' }}>
-      <div className="play-controls">
-        <button type="button" className="fa fa-play play-pause-button" aria-label="Play Pause" title="play" onClick={(event) => togglePlay(event)} />
-        <input className="play-range" type="range" aria-label="Range" value={rangeValue} min={startYear} max={endYear} onInput={(event) => changeYear(event)} onChange={(event) => changeYear(event)} />
+      <div className="play_controls">
+        <button type="button" className="fa fa-play play_pause_button" aria-label="Play Pause" title="play" onClick={(event) => togglePlay(event)} />
+        <input className="play_range" type="range" aria-label="Range" value={rangeValue} min={startYear} max={endYear} onInput={(event) => changeYear(event)} onChange={(event) => changeYear(event)} />
       </div>
       <div ref={chartRef}>
         {(isVisible) && (<div className="chart" id={`chartIdx${idx}`} />)}
       </div>
-      <div className="meta_data" />
+      <div className="meta_data">
+        <div className="values" />
+        <div className="line_chart" />
+      </div>
       <noscript>Your browser does not support JavaScript!</noscript>
     </div>
   );

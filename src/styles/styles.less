@@ -11,49 +11,65 @@
   }
   .chart_container {
     position: relative;
-  }
-  .meta_data {
-    bottom: 50px;
-    color: #222;
-    position: absolute;
-    right: 10px;
-    .year {
-      font-size: 80px;
+    .chart {
+      overflow: hidden;
     }
-    .total {
-      font-size: 22px;
-      font-weight: 600;
-    }
-  }
-
-  .play-controls {
-    margin: 1em auto;
-    max-width: 1000px;
-    .play-pause-button {
-      background-color: @unblue;
-      border-radius: 25px;
-      border: 1px solid @unblue;
-      color: #fff;
-      cursor: pointer;
-      height: 50px;
-      margin-left: 10px;
-      margin-right: 10px;
-      transition: background-color 250ms;
-      width: 50px;
-      &:hover {
-       opacity: 0.7;
+    .meta_data {
+      bottom: 50px;
+      color: #222;
+      position: absolute;
+      text-align: right;
+      right: 10px;
+      .values {
+        .year {
+          font-size: 60px;
+        }
+        .total {
+          font-size: 22px;
+          font-weight: 600;
+        }
       }
     }
-    .play-range {
-      accent-color: @unblue;
-      background-color: @ungrey;
-      border-radius: 9px;
-      height: 9px;
-      width: calc(100% - 100px);
-      &::-webkit-slider-thumb {
+    .line_chart {
+      svg {
+        height: 42px;
+        width: 230px;
+        .line_container {
+          fill: none;
+          stroke-width: 3;
+          stroke: @unblue;
+        }
+      }
+    }
+
+    .play_controls {
+      margin: 1em auto;
+      max-width: 1000px;
+      .play_pause_button {
         background-color: @unblue;
-        border-radius: 11px;
+        border-radius: 25px;
         border: 1px solid @unblue;
+        color: #fff;
+        cursor: pointer;
+        height: 50px;
+        margin-left: 10px;
+        margin-right: 10px;
+        transition: background-color 250ms;
+        width: 50px;
+        &:hover {
+         opacity: 0.7;
+        }
+      }
+      .play_range {
+        background-color: @ungrey;
+        border-radius: 9px;
+        height: 9px;
+        width: calc(100% - 100px);
+        &::-webkit-slider-thumb {
+          background-color: @unblue;
+          border-radius: 11px;
+          border: 1px solid @unblue;
+        }
       }
     }
   }

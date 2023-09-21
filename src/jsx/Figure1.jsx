@@ -13,7 +13,7 @@ function Figure1() {
   const [dataFigure, setDataFigure] = useState(false);
 
   const cleanData = (data) => data.map((el) => {
-    const values = Object.values(el).map(val => (val === '' ? 0 : roundNr(parseFloat(val), 0)));
+    const values = Object.values(el).map(val => (val === '' ? 0 : roundNr(parseFloat(val), 0))).filter(val1 => !Number.isNaN(val1));
     return ({
       data: values.map((e) => ({
         value: e
