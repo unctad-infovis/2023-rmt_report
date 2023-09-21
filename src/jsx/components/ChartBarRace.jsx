@@ -149,7 +149,7 @@ function BarRaceChart({
   }, [getData, input]);
 
   const xScale = d3.scaleLinear()
-    .range([0, 230])
+    .range([0, 170])
     .domain([0, 43]);
   const yScale = d3.scaleLinear()
     .range([40, 2])
