@@ -130,6 +130,8 @@ function BarRaceChart({
   const nbr = 15;
   const chart = useRef();
   const [rangeValue, setRangeValue] = useState(0);
+  const [chartDone, setChartDone] = useState(false);
+  const [once, setOnce] = useState(false);
 
   const getData = useCallback((year) => {
     year = parseInt(year, 10);
@@ -143,7 +145,7 @@ function BarRaceChart({
 
   const getSubtitle = useCallback(() => {
     const total = (getData(input.value)[0][1]).toFixed(0);
-    return `<div class="year">${input.value}</div><div class="total">Total: ${formatNr(total)} tonnes</div>`;
+    return `<div class="year">${input.value}</div><div class="total">${formatNr(total)} tonnes</div>`;
   }, [getData, input]);
 
   const xScale = d3.scaleLinear()
@@ -164,14 +166,14 @@ function BarRaceChart({
     d3.select('.line_1').attr('d', line(tmp));
   }, [data, xScale, yScale]);
 
-  const pause = () => {
+  const pause = useCallback(() => {
     btn.title = 'play';
     btn.className = 'fa fa-play  play_pause_button';
     clearTimeout(chart.current.sequenceTimer);
     chart.current.sequenceTimer = undefined;
-  };
+  }, [btn]);
 
-  const updateChart = (year_idx) => {
+  const updateChart = useCallback((year_idx) => {
     document.querySelectorAll('.meta_data .values')[0].innerHTML = getSubtitle();
 
     chart.current.series[0].update({
@@ -179,39 +181,45 @@ function BarRaceChart({
       data: getData(year_idx)[1]
     });
     updateLineChart(year_idx);
-  };
+  }, [getData, getSubtitle, updateLineChart]);
 
-  const update = (increment) => {
-    if (increment) {
-      input.value = parseInt(input.value, 10) + increment;
-    }
-    if (input.value >= endYear) {
-      pause(btn);
-    }
-    setRangeValue(input.value);
-    updateChart(input.value);
-  };
-
-  const play = () => {
-    btn.title = 'pause';
-    btn.className = 'fa fa-pause  play_pause_button';
-    chart.current.sequenceTimer = setInterval(() => {
-      update(1);
-    }, 500);
-  };
-
-  const togglePlay = () => {
+  const togglePlay = useCallback(() => {
+    const update = (increment) => {
+      if (increment) {
+        input.value = parseInt(input.value, 10) + increment;
+      }
+      if (input.value >= endYear) {
+        pause(btn);
+      }
+      setRangeValue(input.value);
+      updateChart(input.value);
+    };
+    const play = () => {
+      btn.title = 'pause';
+      btn.className = 'fa fa-pause  play_pause_button';
+      chart.current.sequenceTimer = setInterval(() => {
+        update(1);
+      }, 500);
+    };
     if (chart.current.sequenceTimer) {
       pause();
     } else {
       play();
     }
-  };
+  }, [pause, btn, input, updateChart]);
+
   const changeYear = (event) => {
     pause();
     updateChart(event.currentTarget.value);
     setRangeValue(event.currentTarget.value);
   };
+
+  useEffect(() => {
+    if (chartDone === true && once === false) {
+      togglePlay();
+      setOnce(true);
+    }
+  }, [chartDone, once, togglePlay]);
 
   const isVisible = useIsVisible(chartRef, { once: true });
   const createChart = useCallback(() => {
@@ -302,17 +310,18 @@ function BarRaceChart({
           dataLabels: [{
             enabled: true,
             style: {
-              fontWeight: 600,
-              fontSize: 17
+              fontSize: 17,
+              fontWeight: 600
             },
             y: 8
           }, {
             enabled: true,
             format: '{point.name}',
             style: {
-              fontWeight: 'normal',
               color: '#222',
-              fontSize: 15
+              fontSize: 15,
+              fontWeight: 'normal',
+              opacity: 1
             },
             y: -10
           }]
@@ -357,7 +366,7 @@ function BarRaceChart({
       },
       title: {
         align: 'left',
-        margin: 50,
+        margin: 30,
         style: {
           color: '#000',
           fontSize: '30px',
@@ -430,9 +439,9 @@ function BarRaceChart({
           value: 0,
           width: 1
         }],
-        showFirstLabel: true,
+        showFirstLabel: false,
         showLastLabel: true,
-        tickPixelInterval: 150,
+        tickPixelInterval: 100,
         title: {
           enabled: true,
           reserveSpace: true,
@@ -450,7 +459,8 @@ function BarRaceChart({
       }
     });
     chartRef.current.querySelector(`#chartIdx${idx}`).style.opacity = 1;
-  }, [chart_height, data, idx, note, source, getData, subtitle, title]);
+    setChartDone(true);
+  }, [chart_height, data, getData, idx, note, source, subtitle, title]);
 
   useEffect(() => {
     if (isVisible === true) {
