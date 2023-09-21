@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useCallback, useRef, memo
+  useEffect, useCallback, useRef, memo, useState
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,7 +14,8 @@ import highchartsExporting from 'highcharts/modules/exporting';
 import highchartsExportData from 'highcharts/modules/export-data';
 
 // Load helpers.
-import roundNr from '../helpers/RoundNr.js';
+import countryCodes from '../helpers/CountryCodes.js';
+import formatNr from '../helpers/FormatNr.js';
 
 highchartsAccessibility(Highcharts);
 highchartsExporting(Highcharts);
@@ -24,7 +25,7 @@ Highcharts.setOptions({
   lang: {
     decimalPoint: '.',
     downloadCSV: 'Download CSV data',
-    thousandsSep: ','
+    thousandsSep: ' '
   }
 });
 Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
@@ -48,274 +49,150 @@ Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
 /*
  * Animate dataLabels functionality
  */
+// eslint-disable-next-line
 (function (H) {
-    const FLOAT = /^-?\d+\.?\d*$/;
+  const FLOAT = /^-?\d+\.?\d*$/;
 
-    // Add animated textSetter, just like fill/strokeSetters
-    H.Fx.prototype.textSetter = function () {
-        let startValue = this.start.replace(/ /g, ''),
-            endValue = this.end.replace(/ /g, ''),
-            currentValue = this.end.replace(/ /g, '');
+  // Add animated textSetter, just like fill/strokeSetters
+  // eslint-disable-next-line
+  H.Fx.prototype.textSetter = function () {
+    let startValue = this.start.replace(/ /g, '');
+    let endValue = this.end.replace(/ /g, '');
+    let currentValue = this.end.replace(/ /g, '');
 
-        if ((startValue || '').match(FLOAT)) {
-            startValue = parseInt(startValue, 10);
-            endValue = parseInt(endValue, 10);
+    if ((startValue || '').match(FLOAT)) {
+      startValue = parseInt(startValue, 10);
+      endValue = parseInt(endValue, 10);
 
-            // No support for float
-            currentValue = Highcharts.numberFormat(
-                Math.round(startValue + (endValue - startValue) * this.pos),
-                0
-            );
-        }
+      // No support for float
+      currentValue = Highcharts.numberFormat(Math.round(startValue + (endValue - startValue) * this.pos), 0);
+    }
 
-        this.elem.endText = this.end;
+    this.elem.endText = this.end;
 
-        this.elem.attr(this.prop, currentValue, null, true);
-    };
+    this.elem.attr(this.prop, currentValue, null, true);
+  };
 
-    // Add textGetter, not supported at all at this moment:
-    H.SVGElement.prototype.textGetter = function () {
-        const ct = this.text.element.textContent || '';
-        return this.endText ? this.endText : ct.substring(0, ct.length / 2);
-    };
+  // Add textGetter, not supported at all at this moment:
+  // eslint-disable-next-line
+  H.SVGElement.prototype.textGetter = function () {
+    const ct = this.text.element.textContent || '';
+    return this.endText ? this.endText : ct.substring(0, ct.length / 2);
+  };
 
-    // Temporary change label.attr() with label.animate():
-    // In core it's simple change attr(...) => animate(...) for text prop
-    H.wrap(H.Series.prototype, 'drawDataLabels', function (proceed) {
-        const attr = H.SVGElement.prototype.attr,
-            chart = this.chart;
+  // Temporary change label.attr() with label.animate():
+  // In core it's simple change attr(...) => animate(...) for text prop
+  // eslint-disable-next-line
+  H.wrap(H.Series.prototype, 'drawDataLabels', function (proceed) {
+    const { attr } = H.SVGElement.prototype;
+    const { chart } = this;
 
-        if (chart.sequenceTimer) {
-            this.points.forEach(point =>
-                (point.dataLabels || []).forEach(
-                    label =>
-                        (label.attr = function (hash) {
-                            if (
-                                hash &&
-                                hash.text !== undefined &&
-                                chart.isResizing === 0
-                            ) {
-                                const text = hash.text;
+    if (chart.sequenceTimer) {
+      this.points.forEach(point => (point.dataLabels || []).forEach(
+      // eslint-disable-next-line
+        label => (label.attr = function (hash) {
+          if (
+            hash && hash.text !== undefined && chart.isResizing === 0
+          ) {
+            const { text } = hash;
 
-                                delete hash.text;
+            delete hash.text;
 
-                                return this
-                                    .attr(hash)
-                                    .animate({ text });
-                            }
-                            return attr.apply(this, arguments);
+            return this.attr(hash).animate({ text });
+          }
+          // eslint-disable-next-line
+          return attr.apply(this, arguments);
+        })
+      ));
+    }
 
-                        })
-                )
-            );
-        }
+    // eslint-disable-next-line
+    const ret = proceed.apply(this, Array.prototype.slice.call(arguments, 1));
 
-        const ret = proceed.apply(
-            this,
-            Array.prototype.slice.call(arguments, 1)
-        );
+    // eslint-disable-next-line
+    this.points.forEach(p => (p.dataLabels || []).forEach(d => (d.attr = attr)));
 
-        this.points.forEach(p =>
-            (p.dataLabels || []).forEach(d => (d.attr = attr))
-        );
-
-        return ret;
-    });
+    return ret;
+  });
 }(Highcharts));
 
-function getData(year) {
-    const output = Object.entries(dataset)
-        .map(country => {
-            const [countryName, countryData] = country;
-            return [countryName, Number(countryData[year])];
-        })
-        .sort((a, b) => b[1] - a[1]);
-    return [output[0], output.slice(1, nbr)];
-}
-
-function getSubtitle() {
-    const population = (getData(input.value)[0][1] / 1000000000).toFixed(2);
-    return `<span style="font-size: 80px">${input.value}</span>
-        <br>
-        <span style="font-size: 22px">
-            Total: <b>: ${population}</b> billion
-        </span>`;
-}
-
-(async () => {
-
-    dataset = await fetch(
-        'https://demo-live-data.highcharts.com/population.json'
-    ).then(response => response.json());
-
-
-    chart = Highcharts.chart('container', {
-        chart: {
-            animation: {
-                duration: 500
-            },
-            marginRight: 50
-        },
-        title: {
-            text: 'World population by country',
-            align: 'left'
-        },
-        subtitle: {
-            useHTML: true,
-            text: getSubtitle(),
-            floating: true,
-            align: 'right',
-            verticalAlign: 'middle',
-            y: -80,
-            x: -100
-        },
-
-        legend: {
-            enabled: false
-        },
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {
-            opposite: true,
-            tickPixelInterval: 150,
-            title: {
-                text: null
-            }
-        },
-        plotOptions: {
-            series: {
-                animation: false,
-                groupPadding: 0,
-                pointPadding: 0.1,
-                borderWidth: 0,
-                colorByPoint: true,
-                dataSorting: {
-                    enabled: true,
-                    matchByName: true
-                },
-                type: 'bar',
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
-        series: [
-            {
-                type: 'bar',
-                name: startYear,
-                data: getData(startYear)[1]
-            }
-        ],
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 550
-                },
-                chartOptions: {
-                    xAxis: {
-                        visible: false
-                    },
-                    subtitle: {
-                        x: 0
-                    },
-                    plotOptions: {
-                        series: {
-                            dataLabels: [{
-                                enabled: true,
-                                y: 8
-                            }, {
-                                enabled: true,
-                                format: '{point.name}',
-                                y: -8,
-                                style: {
-                                    fontWeight: 'normal',
-                                    opacity: 0.7
-                                }
-                            }]
-                        }
-                    }
-                }
-            }]
-        }
-    });
-})();
-
-/*
- * Pause the timeline, either when the range is ended, or when clicking the pause button.
- * Pausing stops the timer and resets the button to play mode.
- */
-function pause(button) {
-    button.title = 'play';
-    button.className = 'fa fa-play';
-    clearTimeout(chart.sequenceTimer);
-    chart.sequenceTimer = undefined;
-}
-
-/*
- * Update the chart. This happens either on updating (moving) the range input,
- * or from a timer when the timeline is playing.
- */
-function update(increment) {
-    if (increment) {
-        input.value = parseInt(input.value, 10) + increment;
-    }
-    if (input.value >= endYear) {
-        // Auto-pause
-        pause(btn);
-    }
-
-    chart.update(
-        {
-            subtitle: {
-                text: getSubtitle()
-            }
-        },
-        false,
-        false,
-        false
-    );
-
-    chart.series[0].update({
-        name: input.value,
-        data: getData(input.value)[1]
-    });
-}
-
-/*
- * Play the timeline.
- */
-function play(button) {
-    button.title = 'pause';
-    button.className = 'fa fa-pause';
-    chart.sequenceTimer = setInterval(function () {
-        update(1);
-    }, 500);
-}
-
-btn.addEventListener('click', function () {
-    if (chart.sequenceTimer) {
-        pause(this);
-    } else {
-        play(this);
-    }
-});
-/*
- * Trigger the update on the range bar click.
- */
-input.addEventListener('click', function () {
-    update();
-});
-
-
-function BarChart({
-  chart_height, data, data_decimals, idx, labels_align, labels_inside, note, prefix, source, subtitle, title, xlabel, ylabel, ytick_interval, ymax, ymin
+function BarRaceChart({
+  chart_height, data, idx, note, source, subtitle, title
 }) {
   const chartRef = useRef();
+  const startYear = 1980;
+  const endYear = 2023;
+  const btn = document.getElementsByClassName('play-pause-button')[0];
+  const input = document.getElementsByClassName('play-range')[0];
+  const nbr = 15;
+  const chart = useRef();
+  const [rangeValue, setRangeValue] = useState(0);
+
+  const getData = useCallback((year) => {
+    year = parseInt(year, 10);
+    const output = Object.entries(data).map(country => {
+      const countryName = country[1].name;
+      const countryData = country[1].data;
+      return [countryName, countryData[year - startYear].value];
+    }).sort((a, b) => b[1] - a[1]);
+    return [output[0], output.slice(1, nbr)];
+  }, [data]);
+
+  const getSubtitle = useCallback(() => {
+    const total = (getData(input.value)[0][1]).toFixed(0);
+    return `<div class="year">${input.value}</div><div class="total">Total: ${formatNr(total)} tonnes</div>`;
+  }, [getData, input]);
+
+  const pause = () => {
+    btn.title = 'play';
+    btn.className = 'fa fa-play  play-pause-button';
+    clearTimeout(chart.current.sequenceTimer);
+    chart.current.sequenceTimer = undefined;
+  };
+
+  const updateChart = (year_idx) => {
+    document.getElementsByClassName('meta_data')[0].innerHTML = getSubtitle();
+
+    chart.current.series[0].update({
+      name: year_idx,
+      data: getData(year_idx)[1]
+    });
+  };
+
+  const update = (increment) => {
+    if (increment) {
+      input.value = parseInt(input.value, 10) + increment;
+    }
+    if (input.value >= endYear) {
+      pause(btn);
+    }
+    updateChart(input.value);
+  };
+
+  const play = () => {
+    btn.title = 'pause';
+    btn.className = 'fa fa-pause  play-pause-button';
+    chart.current.sequenceTimer = setInterval(() => {
+      update(1);
+    }, 500);
+  };
+
+  const togglePlay = () => {
+    if (chart.current.sequenceTimer) {
+      pause();
+    } else {
+      play();
+    }
+  };
+  const changeYear = (event) => {
+    pause();
+    updateChart(event.currentTarget.value);
+    setRangeValue(event.currentTarget.value);
+  };
 
   const isVisible = useIsVisible(chartRef, { once: true });
   const createChart = useCallback(() => {
-    Highcharts.chart(`chartIdx${idx}`, {
+    chart.current = Highcharts.chart(`chartIdx${idx}`, {
       caption: {
         align: 'left',
         margin: 15,
@@ -329,6 +206,9 @@ function BarChart({
         x: 0
       },
       chart: {
+        animation: {
+          duration: 500
+        },
         height: chart_height,
         events: {
           load() {
@@ -336,6 +216,7 @@ function BarChart({
             this.renderer.image('https://unctad.org/sites/default/files/2022-11/unctad_logo.svg', 5, 15, 80, 100).add();
           }
         },
+        marginRight: 50,
         resetZoomButton: {
           theme: {
             fill: '#fff',
@@ -365,7 +246,7 @@ function BarChart({
         type: 'bar',
         zoomType: 'x'
       },
-      // colors: ['#009edb'],
+      colors: ['#009edb'],
       credits: {
         enabled: false
       },
@@ -379,43 +260,39 @@ function BarChart({
         }
       },
       legend: {
-        align: 'right',
-        enabled: (data.length > 1),
-        itemStyle: {
-          color: '#000',
-          cursor: 'default',
-          fontFamily: 'Roboto',
-          fontSize: '16px',
-          fontWeight: 400
-        },
-        layout: 'horizontal',
-        margin: 0,
-        verticalAlign: 'top'
+        enabled: false
       },
       plotOptions: {
         bar: {
-          animation: {
-            duration: 2000,
-          },
+          animation: false,
+          borderWidth: 0,
+          colorByPoint: true,
           cursor: 'pointer',
-          groupPadding: 0,
-          dataLabels: {
-            align: labels_align,
-            inside: (labels_inside === true) ? true : undefined,
+          dataSorting: {
             enabled: true,
-            formatter() {
-              // eslint-disable-next-line react/no-this-in-sfc
-              return `${prefix}${roundNr(this.y, data_decimals).toFixed(data_decimals)}`;
-            },
-            step: 2,
-            color: (labels_inside) ? '#fff' : 'rgba(0, 0, 0, 0.8)',
-            style: {
-              fontFamily: 'Roboto',
-              fontSize: '14px',
-              fontWeight: 400,
-              textOutline: 'none'
-            }
+            matchByName: true
           },
+          groupPadding: 0,
+          pointPadding: 0.075
+        },
+        series: {
+          dataLabels: [{
+            enabled: true,
+            style: {
+              fontWeight: 600,
+              fontSize: 13
+            },
+            y: 6
+          }, {
+            enabled: true,
+            format: '{point.name}',
+            style: {
+              fontWeight: 'normal',
+              opacity: 0.7,
+              fontSize: 12
+            },
+            y: -8
+          }]
         }
       },
       responsive: {
@@ -425,7 +302,7 @@ function BarChart({
               layout: 'horizontal'
             },
             title: {
-              margin: 10,
+              margin: 20,
               style: {
                 fontSize: '26px',
                 lineHeight: '30px'
@@ -437,7 +314,11 @@ function BarChart({
           }
         }]
       },
-      series: data,
+      series: [{
+        data: getData(startYear)[1],
+        name: startYear,
+        type: 'bar'
+      }],
       subtitle: {
         align: 'left',
         enabled: true,
@@ -453,7 +334,7 @@ function BarChart({
       },
       title: {
         align: 'left',
-        margin: 20,
+        margin: 50,
         style: {
           color: '#000',
           fontSize: '30px',
@@ -465,43 +346,27 @@ function BarChart({
         x: 100
       },
       tooltip: {
-        backgroundColor: '#fff',
-        borderColor: '#ccc',
-        borderRadius: 0,
-        borderWidth: 1,
-        crosshairs: true,
-        formatter() {
-          // eslint-disable-next-line react/no-this-in-sfc
-          const values = this.points.map(point => [point.series.name, point.y, point.color]);
-          const rows = [];
-          rows.push(values.map(point => `<div style="color: ${point[2]}"><span class="tooltip_label">${(point[0]) ? `${point[0]}: ` : ''}</span><span class="tooltip_value">${prefix}${roundNr(point[1], data_decimals)}</span></div>`).join(''));
-          // eslint-disable-next-line react/no-this-in-sfc
-          return `<div class="tooltip_container"><h3 class="tooltip_header">${xlabel} ${this.points[0].key}</h3>${rows}</div>`;
-        },
-        shadow: false,
-        shared: true,
-        useHTML: true
+        enabled: false
       },
       xAxis: {
-        accessibility: {
-          description: xlabel
-        },
-        allowDecimals: false,
         categories: data[0].labels,
         crosshair: {
-          color: 'rgba(124, 112, 103, 0.2)',
+          color: 'transparent',
           width: 1
         },
         reserveSpace: true,
         labels: {
-          formatter: (el) => ((el.value === 'World') ? `<strong>${el.value}</strong>` : (el.value === 'Latin America and the Caribbean') ? 'Latin America and<br />the Caribbean' : el.value),
+          formatter: (el) => `<img src="./assets/img/flags/${countryCodes(el.value)}.png" class="flag" />`,
+          distance: 10,
+          padding: 0,
           rotation: 0,
           style: {
             color: 'rgba(0, 0, 0, 0.8)',
             fontFamily: 'Roboto',
-            fontSize: '12px',
+            fontSize: '14px',
             fontWeight: 400
-          }
+          },
+          useHTML: true
         },
         lineColor: 'transparent',
         lineWidth: 0,
@@ -509,17 +374,9 @@ function BarChart({
         plotLines: null,
         showFirstLabel: true,
         showLastLabel: true,
-        tickWidth: 1,
+        tickWidth: 0,
         title: {
-          enabled: true,
-          offset: 40,
-          style: {
-            color: 'rgba(0, 0, 0, 0.8)',
-            fontFamily: 'Roboto',
-            fontSize: '16px',
-            fontWeight: 400
-          },
-          text: xlabel
+          enabled: false
         },
         type: 'category'
       },
@@ -528,14 +385,10 @@ function BarChart({
           description: 'Index'
         },
         allowDecimals: true,
-        custom: {
-          allowNegativeLog: true
-        },
         gridLineColor: 'rgba(124, 112, 103, 0.2)',
         gridLineWidth: 1,
         gridLineDashStyle: 'shortdot',
         labels: {
-          formatter: (el) => (`${prefix}${el.value}`),
           rotation: 0,
           style: {
             color: 'rgba(0, 0, 0, 0.8)',
@@ -547,9 +400,7 @@ function BarChart({
         endOnTick: false,
         lineColor: 'transparent',
         lineWidth: 0,
-        max: ymax,
-        min: ymin,
-        opposite: false,
+        opposite: true,
         startOnTick: false,
         plotLines: [{
           color: 'rgba(124, 112, 103, 0.6)',
@@ -558,7 +409,7 @@ function BarChart({
         }],
         showFirstLabel: true,
         showLastLabel: true,
-        tickInterval: ytick_interval,
+        tickPixelInterval: 150,
         title: {
           enabled: true,
           reserveSpace: true,
@@ -569,64 +420,53 @@ function BarChart({
             fontSize: '16px',
             fontWeight: 400
           },
-          text: ylabel,
+          text: '',
           verticalAlign: 'top',
         },
         type: 'linear'
       }
     });
     chartRef.current.querySelector(`#chartIdx${idx}`).style.opacity = 1;
-  }, [chart_height, data, data_decimals, idx, labels_align, labels_inside, note, prefix, source, subtitle, title, xlabel, ylabel, ytick_interval, ymax, ymin]);
+  }, [chart_height, data, idx, note, source, getData, subtitle, title]);
 
   useEffect(() => {
     if (isVisible === true) {
       setTimeout(() => {
         createChart();
+        document.getElementsByClassName('meta_data')[0].innerHTML = getSubtitle();
       }, 300);
     }
-  }, [createChart, isVisible]);
+  }, [createChart, getSubtitle, isVisible]);
 
   return (
     <div className="chart_container" style={{ minHeight: chart_height, maxWidth: '700px' }}>
+      <div className="play-controls">
+        <button type="button" className="fa fa-play play-pause-button" aria-label="Play Pause" title="play" onClick={(event) => togglePlay(event)} />
+        <input className="play-range" type="range" aria-label="Range" value={rangeValue} min={startYear} max={endYear} onInput={(event) => changeYear(event)} onChange={(event) => changeYear(event)} />
+      </div>
       <div ref={chartRef}>
         {(isVisible) && (<div className="chart" id={`chartIdx${idx}`} />)}
       </div>
+      <div className="meta_data" />
       <noscript>Your browser does not support JavaScript!</noscript>
     </div>
   );
 }
 
-BarChart.propTypes = {
+BarRaceChart.propTypes = {
   chart_height: PropTypes.number,
   data: PropTypes.instanceOf(Array).isRequired,
-  data_decimals: PropTypes.number.isRequired,
   idx: PropTypes.string.isRequired,
-  labels_align: PropTypes.string,
-  labels_inside: PropTypes.bool,
   note: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  prefix: PropTypes.string,
   source: PropTypes.string.isRequired,
   subtitle: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  xlabel: PropTypes.string,
-  ylabel: PropTypes.string,
-  ytick_interval: PropTypes.number,
-  ymax: PropTypes.number,
-  ymin: PropTypes.number
+  title: PropTypes.string.isRequired
 };
 
-BarChart.defaultProps = {
+BarRaceChart.defaultProps = {
   chart_height: 800,
-  labels_align: undefined,
-  labels_inside: false,
   note: false,
-  prefix: '',
-  subtitle: false,
-  xlabel: '',
-  ylabel: '',
-  ytick_interval: undefined,
-  ymax: undefined,
-  ymin: undefined
+  subtitle: ''
 };
 
-export default memo(BarChart);
+export default memo(BarRaceChart);

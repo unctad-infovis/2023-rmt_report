@@ -1,9 +1,63 @@
-//@import url('https://fonts.googleapis.com/css?family=Roboto+Serif:600.css');
+@import url("https://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 
 @import 'colors.less';
 
 #app-root-2023-rmt_report .app {
   font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  .flag {
+    height: 23px;
+    vertical-align: middle;
+    width: 33px;
+  }
+  .chart_container {
+    position: relative;
+  }
+  .meta_data {
+    bottom: 50px;
+    color: #222;
+    position: absolute;
+    right: 10px;
+    .year {
+      font-size: 80px;
+    }
+    .total {
+      font-size: 22px;
+      font-weight: 600;
+    }
+  }
+
+  .play-controls {
+    margin: 1em auto;
+    max-width: 1000px;
+    .play-pause-button {
+      background-color: @unblue;
+      border-radius: 25px;
+      border: 1px solid @unblue;
+      color: #fff;
+      cursor: pointer;
+      height: 50px;
+      margin-left: 10px;
+      margin-right: 10px;
+      transition: background-color 250ms;
+      width: 50px;
+      &:hover {
+       opacity: 0.7;
+      }
+    }
+    .play-range {
+      accent-color: @unblue;
+      background-color: @ungrey;
+      border-radius: 9px;
+      height: 9px;
+      width: calc(100% - 100px);
+      &::-webkit-slider-thumb {
+        background-color: @unblue;
+        border-radius: 11px;
+        border: 1px solid @unblue;
+      }
+    }
+  }
+
 }
 
 @import 'basics.less';
