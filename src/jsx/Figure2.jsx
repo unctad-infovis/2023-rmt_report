@@ -45,9 +45,9 @@ function Figure1() {
         data={dataFigure}
         data_decimals={1}
         idx="02"
-        note="Values for top three countries in 2022 for each segment are shown."
+        note="Values for top three countries in 2023 for each segment are shown."
         source="UNCTADstat (UNCTAD, 2023a), Clarkson Research"
-        subtitle="Percentage of world total, 2014–2022"
+        subtitle="Percentage of world total, 2015–2023"
         suffix="%"
         title="Building, ownership, registration and recycling of ships"
         ylabel=""

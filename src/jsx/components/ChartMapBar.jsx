@@ -78,139 +78,126 @@ function MapBarChart({
 }) {
   const chartRef = useRef();
   const chart = useRef();
-  const [rangeValue, setRangeValue] = useState(2022);
+  const [rangeValue, setRangeValue] = useState(2023);
   const [once, setOnce] = useState(false);
 
   data = {
-    2014: [
-      // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.024, 0.125, 0.127, 19.595, 5, 110],
-      ['China', 35.895, 9.127, 4.649, 23.675, -15, 5],
-      ['Greece', 0, 15.269, 4.364, 0, -60, 40],
-      ['India', 0.148, 1.272, 0.936, 30.707, -65, 130],
-      ['Japan', 21.036, 13.421, 1.685, 0.068, 20, 92],
-      ['Korea, Republic of', 34.356, 4.588, 1.08, 0.024, 61, -10],
-      ['Liberia', 0, 0.002, 11.979, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.03, 9.055, 0, -20, 60],
-      ['Pakistan', 0, 0.04, 0.039, 18.352, -50, 60],
-      ['Panama', 0, 0.211, 19.933, 0, -50, 40]
-    ],
     2015: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.034, 0.096, 0.115, 34.337, 5, 110],
-      ['China', 37.237, 8.81, 4.47, 19.127, -15, 5],
-      ['Greece', 0.006, 16.011, 4.289, 0, -60, 40],
-      ['India', 0.044, 1.233, 0.891, 21.954, -65, 130],
-      ['Japan', 19.004, 13.098, 1.77, 0.0140, 20, 92],
-      ['Korea, Republic of', 35, 4.557, 1.016, 0, 61, -10],
-      ['Liberia', 0, 0.002, 11.498, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.073, 10.157, 0, -20, 60],
-      ['Pakistan', 0, 0.041, 0.041, 19.249, -50, 60],
-      ['Panama', 0, 0.127, 19.138, 0, -50, 40]
+      ['Bangladesh', 0.024, 0.096, 0.115, 19.595, 5, 110],
+      ['China', 35.895, 8.81, 4.47, 23.675, -15, 5],
+      ['Greece', 0.0, 16.011, 4.289, 0.0, -60, 40],
+      ['India', 0.148, 1.233, 0.891, 30.707, -65, 130],
+      ['Japan', 21.036, 13.098, 1.77, 0.068, 20, 92],
+      ['Korea, Republic of', 34.356, 4.557, 1.016, 0.024, 61, -10],
+      ['Liberia', 0.0, 0.002, 11.498, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.073, 10.157, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.041, 0.041, 18.352, -50, 60],
+      ['Panama', 0.0, 0.127, 19.138, 0.0, -50, 40]
     ],
     2016: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.009, 0.079, 0.096, 32.413, 5, 110],
-      ['China', 33.49, 8.783, 4.239, 11.964, -15, 5],
-      ['Greece', 0.014, 16.36, 4.059, 0, -60, 40],
-      ['India', 0.056, 1.217, 0.904, 32.196, -65, 130],
-      ['Japan', 20.011, 12.586, 1.802, 0.017, 20, 92],
-      ['Korea, Republic of', 38.117, 4.373, 0.94, 0.033, 61, -10],
-      ['Liberia', 0, 0.007, 11.459, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.086, 10.945, 0, -20, 60],
-      ['Pakistan', 0, 0.039, 0.039, 18.639, -50, 60],
-      ['Panama', 0, 0.077, 18.39, 0, -50, 40]
+      ['Bangladesh', 0.034, 0.079, 0.096, 34.337, 5, 110],
+      ['China', 37.237, 8.783, 4.239, 19.127, -15, 5],
+      ['Greece', 0.006, 16.36, 4.059, 0.0, -60, 40],
+      ['India', 0.044, 1.217, 0.904, 21.954, -65, 130],
+      ['Japan', 19.004, 12.586, 1.802, 0.0140, 20, 92],
+      ['Korea, Republic of', 35.0, 4.373, 0.94, 0.0, 61, -10],
+      ['Liberia', 0.0, 0.007, 11.459, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.086, 10.945, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.039, 0.039, 19.249, -50, 60],
+      ['Panama', 0.0, 0.077, 18.39, 0.0, -50, 40]
     ],
     2017: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.034, 0.103, 0.1, 28.928, 5, 110],
-      ['China', 36.039, 8.754, 4.256, 16.323, -15, 5],
-      ['Greece', 0.004, 16.964, 3.858, 0, -60, 40],
-      ['India', 0.147, 1.256, 0.929, 29.286, -65, 130],
-      ['Japan', 19.956, 12.043, 1.867, 0.003, 20, 92],
-      ['Korea, Republic of', 34.418, 4.37, 0.807, 0.012, 61, -10],
-      ['Liberia', 0, 0.012, 11.621, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.051, 11.581, 0, -20, 60],
-      ['Pakistan', 0, 0.041, 0.038, 17.878, -50, 60],
-      ['Panama', 0, 0.078, 18.33, 0, -50, 40]
+      ['Bangladesh', 0.009, 0.103, 0.1, 32.413, 5, 110],
+      ['China', 33.49, 8.754, 4.256, 11.964, -15, 5],
+      ['Greece', 0.014, 16.964, 3.858, 0.0, -60, 40],
+      ['India', 0.056, 1.256, 0.929, 32.196, -65, 130],
+      ['Japan', 20.011, 12.043, 1.867, 0.017, 20, 92],
+      ['Korea, Republic of', 38.117, 4.37, 0.807, 0.033, 61, -10],
+      ['Liberia', 0.0, 0.012, 11.621, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.051, 11.581, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.041, 0.038, 18.639, -50, 60],
+      ['Panama', 0.0, 0.078, 18.33, 0.0, -50, 40]
     ],
     2018: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.041, 0.127, 0.108, 45.434, 5, 110],
-      ['China', 40.072, 9.683, 4.676, 2.466, -15, 5],
-      ['Greece', 0.018, 17.374, 3.722, 0, -60, 40],
-      ['India', 0.045, 1.26, 0.956, 24.617, -65, 130],
-      ['Japan', 24.877, 11.608, 1.946, 0.023, 20, 92],
-      ['Korea, Republic of', 25.21, 4.016, 0.719, 0.014, 61, -10],
-      ['Liberia', 0, 0.011, 11.563, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.03, 12.286, 0, -20, 60],
-      ['Pakistan', 0, 0.04, 0.037, 21.103, -50, 60],
-      ['Panama', 0, 0.067, 17.315, 0, -50, 40]
+      ['Bangladesh', 0.034, 0.127, 0.108, 28.928, 5, 110],
+      ['China', 36.039, 9.683, 4.676, 16.323, -15, 5],
+      ['Greece', 0.004, 17.374, 3.722, 0.0, -60, 40],
+      ['India', 0.147, 1.26, 0.956, 29.286, -65, 130],
+      ['Japan', 19.956, 11.608, 1.946, 0.003, 20, 92],
+      ['Korea, Republic of', 34.418, 4.016, 0.719, 0.012, 61, -10],
+      ['Liberia', 0.0, 0.011, 11.563, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.03, 12.286, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.04, 0.037, 17.878, -50, 60],
+      ['Panama', 0.0, 0.067, 17.315, 0.0, -50, 40]
     ],
     2019: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.086, 0.137, 0.123, 55.602, 5, 110],
-      ['China', 35.008, 10.766, 4.976, 2.852, -15, 5],
-      ['Greece', 0.01, 17.631, 3.492, 0.014, -60, 40],
-      ['India', 0.031, 1.215, 0.877, 27.246, -65, 130],
-      ['Japan', 24.642, 11.355, 1.971, 0.011, 20, 92],
-      ['Korea, Republic of', 32.878, 3.897, 0.655, 0.059, 61, -10],
-      ['Liberia', 0, 0.018, 12.256, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.031, 12.348, 0, -20, 60],
-      ['Pakistan', 0, 0.038, 0.036, 2.725, -50, 60],
-      ['Panama', 0, 0.056, 16.774, 0.017, -50, 40]
+      ['Bangladesh', 0.041, 0.137, 0.123, 45.434, 5, 110],
+      ['China', 40.072, 10.766, 4.976, 2.466, -15, 5],
+      ['Greece', 0.018, 17.631, 3.492, 0.0, -60, 40],
+      ['India', 0.045, 1.215, 0.877, 24.617, -65, 130],
+      ['Japan', 24.877, 11.355, 1.971, 0.023, 20, 92],
+      ['Korea, Republic of', 25.21, 3.897, 0.655, 0.014, 61, -10],
+      ['Liberia', 0.0, 0.018, 12.256, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.031, 12.348, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.038, 0.036, 21.103, -50, 60],
+      ['Panama', 0.0, 0.056, 16.774, 0.0, -50, 40]
     ],
     2020: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.148, 0.164, 0.16, 40.431, 5, 110],
-      ['China', 40.262, 11.273, 4.983, 1.36, -15, 5],
-      ['Greece', 0, 17.808, 3.33, 0, -60, 40],
-      ['India', 0.037, 1.258, 0.843, 29.12, -65, 130],
-      ['Japan', 22.206, 11.28, 1.965, 0, 20, 92],
-      ['Korea, Republic of', 31.462, 3.921, 0.722, 0.163, 61, -10],
-      ['Liberia', 0, 0.023, 13.275, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.029, 12.639, 0, -20, 60],
-      ['Pakistan', 0, 0.05, 0.042, 17.989, -50, 60],
-      ['Panama', 0, 0.059, 15.875, 0, -50, 40]
+      ['Bangladesh', 0.086, 0.164, 0.16, 55.602, 5, 110],
+      ['China', 35.008, 11.273, 4.983, 2.852, -15, 5],
+      ['Greece', 0.01, 17.808, 3.33, 0.014, -60, 40],
+      ['India', 0.031, 1.258, 0.843, 27.246, -65, 130],
+      ['Japan', 24.642, 11.28, 1.965, 0.011, 20, 92],
+      ['Korea, Republic of', 32.878, 3.921, 0.722, 0.059, 61, -10],
+      ['Liberia', 0.0, 0.023, 13.275, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.029, 12.639, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.05, 0.042, 2.725, -50, 60],
+      ['Panama', 0.0, 0.059, 15.875, 0.017, -50, 40]
     ],
     2021: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.062, 0.169, 0.171, 54.937, 5, 110],
-      ['China', 44.198, 11.751, 5.188, 0.987, -15, 5],
-      ['Greece', 0.007, 17.658, 3.011, 0.005, -60, 40],
-      ['India', 0.119, 1.249, 0.8, 16.12, -65, 130],
-      ['Japan', 17.648, 11.37, 1.828, 0.037, 20, 92],
-      ['Korea, Republic of', 32.391, 4.067, 0.737, 0.183, 61, -10],
-      ['Liberia', 0, 0.018, 14.018, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.039, 12.823, 0, -20, 60],
-      ['Pakistan', 0, 0.066, 0.041, 18.126, -50, 60],
-      ['Panama', 0, 0.046, 16.111, 0, -50, 40]
+      ['Bangladesh', 0.148, 0.169, 0.171, 40.431, 5, 110],
+      ['China', 40.262, 11.751, 5.188, 1.36, -15, 5],
+      ['Greece', 0.0, 17.658, 3.011, 0.0, -60, 40],
+      ['India', 0.037, 1.249, 0.8, 29.12, -65, 130],
+      ['Japan', 22.206, 11.37, 1.828, 0.0, 20, 92],
+      ['Korea, Republic of', 31.462, 4.067, 0.737, 0.163, 61, -10],
+      ['Liberia', 0.0, 0.018, 14.018, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.039, 12.823, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.066, 0.041, 17.989, -50, 60],
+      ['Panama', 0.0, 0.046, 16.111, 0.0, -50, 40]
     ],
     2022: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0.076, 0.2, 0.197, 38.129, 5, 110],
-      ['China', 46.588, 12.818, 5.355, 2.371, -15, 5],
-      ['Greece', 0.001, 17.759, 2.798, 0.004, -60, 40],
-      ['India', 0.072, 1.227, 0.768, 30.981, -65, 130],
-      ['Japan', 17.246, 10.833, 1.818, 0.073, 20, 92],
-      ['Korea, Republic of', 29.245, 4.231, 0.711, 0.24, 61, -10],
-      ['Liberia', 0, 0.021, 15.245, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.054, 13.159, 0, -20, 60],
-      ['Pakistan', 0, 0.07, 0.039, 17.23, -50, 60],
-      ['Panama', 0, 0.05, 15.902, 0.023, -50, 40]
+      ['Bangladesh', 0.062, 0.2, 0.197, 54.937, 5, 110],
+      ['China', 44.198, 12.818, 5.355, 0.987, -15, 5],
+      ['Greece', 0.007, 17.759, 2.798, 0.005, -60, 40],
+      ['India', 0.119, 1.227, 0.768, 16.12, -65, 130],
+      ['Japan', 17.648, 10.833, 1.818, 0.037, 20, 92],
+      ['Korea, Republic of', 32.391, 4.231, 0.711, 0.183, 61, -10],
+      ['Liberia', 0.0, 0.021, 15.245, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.054, 13.159, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.07, 0.039, 18.126, -50, 60],
+      ['Panama', 0.0, 0.05, 15.902, 0.0, -50, 40]
     ],
     2023: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
-      ['Bangladesh', 0, 0.222, 0.226, 0, 5, 110],
-      ['China', 0, 13.401, 5.471, 0, -15, 5],
-      ['Greece', 0, 17.441, 2.597, 0, -60, 40],
-      ['India', 0, 1.363, 0.798, 0, -65, 130],
-      ['Japan', 0, 10.547, 1.836, 0, 20, 92],
-      ['Korea, Republic of', 0, 4.311, 0.831, 0, 61, -10],
-      ['Liberia', 0, 0.02, 16.647, 0, -20, 90],
-      ['Marshall Islands (the)', 0, 0.062, 13.163, 0, -20, 60],
-      ['Pakistan', 0, 0.079, 0.048, 0, -50, 60],
-      ['Panama', 0, 0.041, 16.064, 0, -50, 40]
+      ['Bangladesh', 0.076, 0.222, 0.226, 38.129, 5, 110],
+      ['China', 46.588, 13.401, 5.471, 2.371, -15, 5],
+      ['Greece', 0.001, 17.441, 2.597, 0.004, -60, 40],
+      ['India', 0.072, 1.363, 0.798, 30.981, -65, 130],
+      ['Japan', 17.246, 10.547, 1.836, 0.073, 20, 92],
+      ['Korea, Republic of', 29.245, 4.311, 0.831, 0.24, 61, -10],
+      ['Liberia', 0.0, 0.02, 16.647, 0.0, -20, 90],
+      ['Marshall Islands (the)', 0.0, 0.062, 13.163, 0.0, -20, 60],
+      ['Pakistan', 0.0, 0.079, 0.048, 17.23, -50, 60],
+      ['Panama', 0.0, 0.041, 16.064, 0.023, -50, 40]
     ]
   };
 
@@ -252,7 +239,7 @@ function MapBarChart({
           align: 'left',
           margin: 15,
           style: {
-            color: 'rgba(0, 0, 0, 0.8)',
+            color: 'rgba(0, 0.0, 0.0, 0.8)',
             fontSize: '14px'
           },
           text: `<em>Source:</em> ${source} ${note ? (`<br /><em>Note:</em> <span>${note}</span>`) : ''}`,
@@ -274,7 +261,7 @@ function MapBarChart({
           resetZoomButton: {
             theme: {
               fill: '#fff',
-              r: 0,
+              r: 0.0,
               areas: {
                 hover: {
                   fill: '#0077b8',
@@ -293,7 +280,7 @@ function MapBarChart({
             }
           },
           style: {
-            color: 'rgba(0, 0, 0, 0.8)',
+            color: 'rgba(0, 0.0, 0.0, 0.8)',
             fontFamily: 'Roboto',
             fontWeight: 400
           }
@@ -321,7 +308,7 @@ function MapBarChart({
             textOutline: '1px solid #fff'
           },
           verticalAlign: 'top',
-          x: 0,
+          x: 0.0,
           y: 130
         },
         mapNavigation: {
@@ -341,8 +328,8 @@ function MapBarChart({
         plotOptions: {
           series: {
             animation: false,
-            borderColor: 'rgba(0, 0, 0, 0.3)',
-            borderRadius: 0,
+            borderColor: 'rgba(0, 0.0, 0.0, 0.3)',
+            borderRadius: 0.0,
             pointWidth: 15
           }
         },
@@ -367,7 +354,7 @@ function MapBarChart({
         },
         series: [{
           borderColor: 'rgba(255, 255, 255, 0.5)',
-          data: data[2014],
+          data: data[2015],
           enableMouseTracking: false,
           joinBy: ['name_en', 'id'],
           keys: ['id', 'Building', 'Ownership', 'Registration', 'Recycling', 'xOffset', 'yOffset'],
@@ -482,7 +469,7 @@ function MapBarChart({
           }, {
             color: '#666',
             geometry: {
-              coordinates: [[-23, -15], [-22, 4]],
+              coordinates: [[-23, -10], [-22, 4]],
               type: 'LineString'
             },
             name: 'Liberia'
@@ -539,7 +526,7 @@ function MapBarChart({
           align: 'left',
           enabled: true,
           style: {
-            color: 'rgba(0, 0, 0, 0.8)',
+            color: 'rgba(0, 0.0, 0.0, 0.8)',
             fontSize: '16px',
             fontWeight: 400,
             lineHeight: '18px'
@@ -658,7 +645,7 @@ function MapBarChart({
   return (
     <div className="chart_container" style={{ minHeight: chart_height, maxWidth: '700px' }}>
       <div className="play_controls">
-        <input className="play_range_map" type="range" aria-label="Range" value={rangeValue} min={2014} max={2022} onChange={(event) => updateChart(event.currentTarget.value)} />
+        <input className="play_range_map" type="range" aria-label="Range" value={rangeValue} min={2015} max={2023} onChange={(event) => updateChart(event.currentTarget.value)} />
         <h3>{rangeValue}</h3>
       </div>
       <div ref={chartRef}>
