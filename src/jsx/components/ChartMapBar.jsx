@@ -611,7 +611,7 @@ function MapBarChart({
       chart.current.addSeries({
         color: '#72bf44',
         data: false,
-        name: 'Building (dwt)',
+        name: 'Ownership (dwt)',
         showInLegend: true,
         type: 'mapcolumn'
       });
