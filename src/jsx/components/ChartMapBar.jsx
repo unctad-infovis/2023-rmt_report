@@ -317,11 +317,12 @@ function MapBarChart({
           layout: 'vertical',
           itemStyle: {
             fontSize: 14,
-            fontWeight: 600
+            fontWeight: 600,
+            textOutline: '1px solid #fff'
           },
           verticalAlign: 'top',
           x: 0,
-          y: 120
+          y: 130
         },
         mapNavigation: {
           buttonOptions: {
