@@ -2,7 +2,7 @@
 
 @import 'colors.less';
 
-#app-root-2023-rmt_report .app {
+.app-root-2023-rmt_report .app {
   font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
   .flag {
     height: 23px;
@@ -10,6 +10,7 @@
     width: 33px;
   }
   .chart_container {
+    margin: auto auto 20px auto;
     position: relative;
     .chart {
       overflow: hidden;
@@ -22,9 +23,13 @@
       text-align: right;
       .values {
         .year {
+          background-color: rgba(255, 255, 255, 0.5);
+          display: inline-block;
           font-size: 60px;
         }
         .total {
+          background-color: rgba(255, 255, 255, 0.9);
+          display: inline-block;
           font-size: 22px;
           font-weight: 600;
         }
@@ -44,8 +49,15 @@
     }
 
     .play_controls {
-      margin: 1em auto;
+      margin: auto auto;
       max-width: 1000px;
+      h3 {
+        display: inline-block;
+        font-size: 30px;
+        line-height: 30px;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
       .play_pause_button {
         background-color: @unblue;
         border-radius: 25px;
@@ -61,6 +73,7 @@
          opacity: 0.7;
         }
       }
+      .play_range_map,
       .play_range {
         background-color: @ungrey;
         border-radius: 9px;

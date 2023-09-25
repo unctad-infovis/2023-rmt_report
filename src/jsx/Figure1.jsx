@@ -47,7 +47,7 @@ function Figure1() {
         idx="01"
         note=""
         source="UNCTAD secretariat"
-        subtitle="Top 15 national fleets, deadweight tonnage, annual, 1980–2023"
+        subtitle="Top 15 national fleets, deadweight tonnage, 1000 dwt, annual, 1980–2023"
         show_only_first_and_last_labels={false}
         suffix="%"
         title="In 2023 Liberia regained it's position with the largest fleet"

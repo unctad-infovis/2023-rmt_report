@@ -59,21 +59,25 @@ Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
   // Add animated textSetter, just like fill/strokeSetters
   // eslint-disable-next-line
   H.Fx.prototype.textSetter = function () {
-    let startValue = this.start.replace(/,/g, '');
-    let endValue = this.end.replace(/,/g, '');
-    let currentValue = this.end.replace(/,/g, '');
+    try {
+      let startValue = this.start.replace(/,/g, '');
+      let endValue = this.end.replace(/,/g, '');
+      let currentValue = this.end.replace(/,/g, '');
 
-    if ((startValue || '').match(FLOAT)) {
-      startValue = parseInt(startValue, 10);
-      endValue = parseInt(endValue, 10);
+      if ((startValue || '').match(FLOAT)) {
+        startValue = parseInt(startValue, 10);
+        endValue = parseInt(endValue, 10);
 
-      // No support for float
-      currentValue = Highcharts.numberFormat(Math.round(startValue + (endValue - startValue) * this.pos), 0);
+        // No support for float
+        currentValue = Highcharts.numberFormat(Math.round(startValue + (endValue - startValue) * this.pos), 0);
+      }
+
+      this.elem.endText = this.end;
+
+      this.elem.attr(this.prop, currentValue, null, true);
+    } catch (error) {
+      console.log(error);
     }
-
-    this.elem.endText = this.end;
-
-    this.elem.attr(this.prop, currentValue, null, true);
   };
 
   // Add textGetter, not supported at all at this moment:
@@ -87,35 +91,39 @@ Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
   // In core it's simple change attr(...) => animate(...) for text prop
   // eslint-disable-next-line
   H.wrap(H.Series.prototype, 'drawDataLabels', function (proceed) {
-    const { attr } = H.SVGElement.prototype;
-    const { chart } = this;
+    try {
+      const { attr } = H.SVGElement.prototype;
+      const { chart } = this;
 
-    if (chart.sequenceTimer) {
-      this.points.forEach(point => (point.dataLabels || []).forEach(
+      if (chart.sequenceTimer) {
+        this.points.forEach(point => (point.dataLabels || []).forEach(
+        // eslint-disable-next-line
+          label => (label.attr = function (hash) {
+            if (
+              hash && hash.text !== undefined && chart.isResizing === 0
+            ) {
+              const { text } = hash;
+
+              delete hash.text;
+
+              return this.attr(hash).animate({ text });
+            }
+            // eslint-disable-next-line
+            return attr.apply(this, arguments);
+          })
+        ));
+      }
+
       // eslint-disable-next-line
-        label => (label.attr = function (hash) {
-          if (
-            hash && hash.text !== undefined && chart.isResizing === 0
-          ) {
-            const { text } = hash;
+      const ret = proceed.apply(this, Array.prototype.slice.call(arguments, 1));
 
-            delete hash.text;
+      // eslint-disable-next-line
+      this.points.forEach(p => (p.dataLabels || []).forEach(d => (d.attr = attr)));
 
-            return this.attr(hash).animate({ text });
-          }
-          // eslint-disable-next-line
-          return attr.apply(this, arguments);
-        })
-      ));
+      return ret;
+    } catch (error) {
+      console.log(error);
     }
-
-    // eslint-disable-next-line
-    const ret = proceed.apply(this, Array.prototype.slice.call(arguments, 1));
-
-    // eslint-disable-next-line
-    this.points.forEach(p => (p.dataLabels || []).forEach(d => (d.attr = attr)));
-
-    return ret;
   });
 }(Highcharts));
 
@@ -145,7 +153,7 @@ function BarRaceChart({
 
   const getSubtitle = useCallback(() => {
     const total = (getData(input.value)[0][1]).toFixed(0);
-    return `<div class="year">${input.value}</div><div class="total">${formatNr(total)} tonnes</div>`;
+    return `<div class="year">${input.value}</div><br /><div class="total">${formatNr(total)} tonnes</div>`;
   }, [getData, input]);
 
   const xScale = d3.scaleLinear()
@@ -177,8 +185,8 @@ function BarRaceChart({
     document.querySelectorAll('.meta_data .values')[0].innerHTML = getSubtitle();
 
     chart.current.series[0].update({
-      name: year_idx,
-      data: getData(year_idx)[1]
+      data: getData(year_idx)[1],
+      name: year_idx
     });
     updateLineChart(year_idx);
   }, [getData, getSubtitle, updateLineChart]);
@@ -247,7 +255,7 @@ function BarRaceChart({
             this.renderer.image('https://unctad.org/sites/default/files/2022-11/unctad_logo.svg', 5, 15, 80, 100).add();
           }
         },
-        marginRight: 50,
+        marginRight: 60,
         resetZoomButton: {
           theme: {
             fill: '#fff',
@@ -298,7 +306,7 @@ function BarRaceChart({
           animation: false,
           borderWidth: 0,
           colorByPoint: true,
-          cursor: 'pointer',
+          cursor: 'default',
           dataSorting: {
             enabled: true,
             matchByName: true
@@ -441,7 +449,7 @@ function BarRaceChart({
         }],
         showFirstLabel: false,
         showLastLabel: true,
-        tickPixelInterval: 100,
+        tickPixelInterval: 75,
         title: {
           enabled: true,
           reserveSpace: true,
