@@ -301,12 +301,21 @@ function MapBarChart({
         legend: {
           align: 'left',
           floating: true,
-          layout: 'vertical',
-          itemStyle: {
+          itemHoverStyle: {
+            color: '#000',
+            cursor: 'default',
             fontSize: 14,
             fontWeight: 600,
             textOutline: '1px solid #fff'
           },
+          itemStyle: {
+            color: '#000',
+            cursor: 'default',
+            fontSize: 14,
+            fontWeight: 600,
+            textOutline: '1px solid #fff'
+          },
+          layout: 'vertical',
           verticalAlign: 'top',
           x: 0.0,
           y: 130
@@ -330,6 +339,11 @@ function MapBarChart({
             animation: false,
             borderColor: 'rgba(0, 0.0, 0.0, 0.3)',
             borderRadius: 0.0,
+            events: {
+              legendItemClick: (e) => {
+                e.preventDefault();
+              }
+            },
             pointWidth: 15
           }
         },
@@ -627,7 +641,7 @@ function MapBarChart({
     if (isVisible === true) {
       setTimeout(() => {
         try {
-          fetch('./assets/data/2023-UNWorldmap.geojson.json')
+          fetch(`${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2023-rmt_report/' : './'}assets/data/2023-UNWorldmap.geojson.json`)
             .then((response) => {
               if (!response.ok) {
                 throw Error(response.statusText);
