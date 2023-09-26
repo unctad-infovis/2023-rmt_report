@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useCallback, useRef, memo, useState
+  useEffect, useCallback, useRef, memo, useState, useMemo
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -74,14 +74,14 @@ Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
 };
 
 function MapBarChart({
-  chart_height, data, idx, note, source, subtitle, title
+  chart_height, idx, note, source, subtitle, title
 }) {
   const chartRef = useRef();
   const chart = useRef();
   const [rangeValue, setRangeValue] = useState(2023);
   const [once, setOnce] = useState(false);
 
-  data = {
+  const data = useMemo(() => ({
     2015: [
       // name, first value, second value, third value, fourth, value, xoffset, yoffset
       ['Bangladesh', 0.024, 0.096, 0.115, 19.595, 5, 110],
@@ -199,7 +199,7 @@ function MapBarChart({
       ['Pakistan', 0.0, 0.079, 0.048, 17.23, -50, 60],
       ['Panama', 0.0, 0.041, 16.064, 0.023, -50, 40]
     ]
-  };
+  }), []);
 
   const isVisible = useIsVisible(chartRef, { once: true });
 
@@ -224,7 +224,7 @@ function MapBarChart({
           y: data[current_year_idx][i][3]
         }, {
           color: '#a066aa',
-          name: 'Recycling',
+          name: 'Scrapping',
           y: data[current_year_idx][i][4]
         }]
       }, false);
@@ -371,7 +371,7 @@ function MapBarChart({
           data: data[2015],
           enableMouseTracking: false,
           joinBy: ['name_en', 'id'],
-          keys: ['id', 'Building', 'Ownership', 'Registration', 'Recycling', 'xOffset', 'yOffset'],
+          keys: ['id', 'Building', 'Ownership', 'Registration', 'Scrapping', 'xOffset', 'yOffset'],
           map_data,
           nullColor: 'rgba(222, 217, 213, 0.5)',
           showInLegend: false
@@ -591,7 +591,7 @@ function MapBarChart({
             y: area[3]
           }, {
             color: '#a066aa',
-            name: 'Recycling',
+            name: 'Scrapping',
             y: area[4]
           }],
           id: area[0],
@@ -605,28 +605,28 @@ function MapBarChart({
       chart.current.addSeries({
         color: '#009edb',
         data: false,
-        name: 'Building (gt)',
+        name: 'Built (gt)',
         showInLegend: true,
         type: 'mapcolumn'
       });
       chart.current.addSeries({
         color: '#72bf44',
         data: false,
-        name: 'Ownership (dwt)',
+        name: 'Owned (dwt)',
         showInLegend: true,
         type: 'mapcolumn'
       });
       chart.current.addSeries({
         color: '#f58220',
         data: false,
-        name: 'Registration (dwt)',
+        name: 'Registered (dwt)',
         showInLegend: true,
         type: 'mapcolumn'
       });
       chart.current.addSeries({
         color: '#a066aa',
         data: false,
-        name: 'Recycling (gt)',
+        name: 'Scrapped (gt)',
         showInLegend: true,
         type: 'mapcolumn'
       });
@@ -672,7 +672,6 @@ function MapBarChart({
 
 MapBarChart.propTypes = {
   chart_height: PropTypes.number,
-  data: PropTypes.instanceOf(Array).isRequired,
   idx: PropTypes.string.isRequired,
   note: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   source: PropTypes.string.isRequired,
