@@ -14,8 +14,9 @@ import highchartsAccessibility from 'highcharts/modules/accessibility';
 import highchartsExporting from 'highcharts/modules/exporting';
 import highchartsExportData from 'highcharts/modules/export-data';
 
-// Load helpers.
+import map_data_import from '../data/UNWorldmap.js';
 
+// Load helpers.
 highchartsMap(Highcharts);
 highchartsAccessibility(Highcharts);
 highchartsExporting(Highcharts);
@@ -229,6 +230,9 @@ function MapBarChart({
         }]
       }, false);
     }
+    chart.current.setTitle({
+      text: `${title} in ${current_year_idx}?`
+    });
     chart.current.redraw(true);
   };
 
@@ -558,7 +562,7 @@ function MapBarChart({
             fontWeight: 700,
             lineHeight: '34px'
           },
-          text: title,
+          text: `${title} in 2023?`,
           widthAdjust: -144,
           x: 100
         },
@@ -640,18 +644,7 @@ function MapBarChart({
   useEffect(() => {
     if (isVisible === true) {
       setTimeout(() => {
-        try {
-          fetch(`${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2023-rmt_report/' : './'}assets/data/2023-UNWorldmap.geojson.json`)
-            .then((response) => {
-              if (!response.ok) {
-                throw Error(response.statusText);
-              }
-              return response.json();
-            })
-            .then(body => createChart(body));
-        } catch (error) {
-          console.error(error);
-        }
+        createChart(map_data_import);
       }, 300);
     }
   }, [createChart, isVisible]);
@@ -662,6 +655,7 @@ function MapBarChart({
         <input className="play_range_map" type="range" aria-label="Range" value={rangeValue} min={2015} max={2023} onChange={(event) => updateChart(event.currentTarget.value)} />
         <h3>{rangeValue}</h3>
       </div>
+      <div className="infotext">Change the year value using the slider</div>
       <div ref={chartRef}>
         {(isVisible) && (<div className="chart" id={`chartIdx${idx}`} />)}
       </div>

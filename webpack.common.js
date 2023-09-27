@@ -4,7 +4,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-
 module.exports = {
   entry: {
     app: './src/index.js'
@@ -56,15 +55,7 @@ module.exports = {
       }
     ]
   },
-  output: {
-    filename: 'js/' + name + '.min.js',
-    path: path.resolve(__dirname, './public'),
-    clean: true
-  },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'css/' + name + '.min.css'
-    }),
     new HtmlWebPackPlugin({
       title: name,
       template: "./src/html/index.html",

@@ -188,8 +188,11 @@ function BarRaceChart({
       data: getData(year_idx)[1],
       name: year_idx
     });
+    chart.current.setTitle({
+      text: `${title} in ${year_idx}?`
+    });
     updateLineChart(year_idx);
-  }, [getData, getSubtitle, updateLineChart]);
+  }, [getData, getSubtitle, title, updateLineChart]);
 
   const togglePlay = useCallback(() => {
     const update = (increment) => {
@@ -381,7 +384,7 @@ function BarRaceChart({
           fontWeight: 700,
           lineHeight: '34px'
         },
-        text: title,
+        text: `${`${title} in ${input.value}`}?`,
         widthAdjust: -144,
         x: 100
       },
@@ -396,7 +399,7 @@ function BarRaceChart({
         },
         reserveSpace: true,
         labels: {
-          formatter: (el) => `<img src="./assets/img/flags/${countryCodes(el.value)}.png" class="flag" />`,
+          formatter: (el) => `<img src="${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2023-rmt_report/' : './'}assets/img/flags/${countryCodes(el.value)}.png" class="flag" />`,
           distance: 10,
           padding: 0,
           rotation: 0,
@@ -468,7 +471,7 @@ function BarRaceChart({
     });
     chartRef.current.querySelector(`#chartIdx${idx}`).style.opacity = 1;
     setChartDone(true);
-  }, [chart_height, data, getData, idx, note, source, subtitle, title]);
+  }, [chart_height, data, getData, input, idx, note, source, subtitle, title]);
 
   useEffect(() => {
     if (isVisible === true) {

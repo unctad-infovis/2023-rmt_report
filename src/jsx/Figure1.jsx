@@ -50,7 +50,7 @@ function Figure1() {
         subtitle="Top 15 national fleets, deadweight tonnage, 1000 dwt, annual, 1980–2023"
         show_only_first_and_last_labels={false}
         suffix="%"
-        title="Who has the world’s largest fleet?"
+        title="Who has the world’s largest fleet"
         ylabel=""
       />
       )}
