@@ -255,7 +255,7 @@ function BarRaceChart({
         events: {
           load() {
             // eslint-disable-next-line react/no-this-in-sfc
-            this.renderer.image('https://unctad.org/sites/default/files/2022-11/unctad_logo.svg', 5, 15, 80, 100).add();
+            this.renderer.image('https://storage.unctad.org/2023-rmt_report/assets/img/unctad_logo.png', 5, 15, 83, 100).add();
           }
         },
         marginRight: 60,
