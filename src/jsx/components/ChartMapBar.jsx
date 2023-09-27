@@ -92,7 +92,7 @@ function MapBarChart({
       ['Japan', 21.036, 13.098, 1.77, 0.068, 20, 92],
       ['Korea, Republic of', 34.356, 4.557, 1.016, 0.024, 61, -10],
       ['Liberia', 0.0, 0.002, 11.498, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.073, 10.157, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.073, 10.157, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.041, 0.041, 18.352, -50, 60],
       ['Panama', 0.0, 0.127, 19.138, 0.0, -50, 40]
     ],
@@ -105,7 +105,7 @@ function MapBarChart({
       ['Japan', 19.004, 12.586, 1.802, 0.0140, 20, 92],
       ['Korea, Republic of', 35.0, 4.373, 0.94, 0.0, 61, -10],
       ['Liberia', 0.0, 0.007, 11.459, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.086, 10.945, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.086, 10.945, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.039, 0.039, 19.249, -50, 60],
       ['Panama', 0.0, 0.077, 18.39, 0.0, -50, 40]
     ],
@@ -118,7 +118,7 @@ function MapBarChart({
       ['Japan', 20.011, 12.043, 1.867, 0.017, 20, 92],
       ['Korea, Republic of', 38.117, 4.37, 0.807, 0.033, 61, -10],
       ['Liberia', 0.0, 0.012, 11.621, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.051, 11.581, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.051, 11.581, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.041, 0.038, 18.639, -50, 60],
       ['Panama', 0.0, 0.078, 18.33, 0.0, -50, 40]
     ],
@@ -131,7 +131,7 @@ function MapBarChart({
       ['Japan', 19.956, 11.608, 1.946, 0.003, 20, 92],
       ['Korea, Republic of', 34.418, 4.016, 0.719, 0.012, 61, -10],
       ['Liberia', 0.0, 0.011, 11.563, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.03, 12.286, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.03, 12.286, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.04, 0.037, 17.878, -50, 60],
       ['Panama', 0.0, 0.067, 17.315, 0.0, -50, 40]
     ],
@@ -144,7 +144,7 @@ function MapBarChart({
       ['Japan', 24.877, 11.355, 1.971, 0.023, 20, 92],
       ['Korea, Republic of', 25.21, 3.897, 0.655, 0.014, 61, -10],
       ['Liberia', 0.0, 0.018, 12.256, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.031, 12.348, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.031, 12.348, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.038, 0.036, 21.103, -50, 60],
       ['Panama', 0.0, 0.056, 16.774, 0.0, -50, 40]
     ],
@@ -157,7 +157,7 @@ function MapBarChart({
       ['Japan', 24.642, 11.28, 1.965, 0.011, 20, 92],
       ['Korea, Republic of', 32.878, 3.921, 0.722, 0.059, 61, -10],
       ['Liberia', 0.0, 0.023, 13.275, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.029, 12.639, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.029, 12.639, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.05, 0.042, 2.725, -50, 60],
       ['Panama', 0.0, 0.059, 15.875, 0.017, -50, 40]
     ],
@@ -170,7 +170,7 @@ function MapBarChart({
       ['Japan', 22.206, 11.37, 1.828, 0.0, 20, 92],
       ['Korea, Republic of', 31.462, 4.067, 0.737, 0.163, 61, -10],
       ['Liberia', 0.0, 0.018, 14.018, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.039, 12.823, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.039, 12.823, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.066, 0.041, 17.989, -50, 60],
       ['Panama', 0.0, 0.046, 16.111, 0.0, -50, 40]
     ],
@@ -183,7 +183,7 @@ function MapBarChart({
       ['Japan', 17.648, 10.833, 1.818, 0.037, 20, 92],
       ['Korea, Republic of', 32.391, 4.231, 0.711, 0.183, 61, -10],
       ['Liberia', 0.0, 0.021, 15.245, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.054, 13.159, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.054, 13.159, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.07, 0.039, 18.126, -50, 60],
       ['Panama', 0.0, 0.05, 15.902, 0.0, -50, 40]
     ],
@@ -196,7 +196,7 @@ function MapBarChart({
       ['Japan', 17.246, 10.547, 1.836, 0.073, 20, 92],
       ['Korea, Republic of', 29.245, 4.311, 0.831, 0.24, 61, -10],
       ['Liberia', 0.0, 0.02, 16.647, 0.0, -20, 90],
-      ['Marshall Islands (the)', 0.0, 0.062, 13.163, 0.0, -20, 60],
+      ['Marshall Islands', 0.0, 0.062, 13.163, 0.0, -20, 60],
       ['Pakistan', 0.0, 0.079, 0.048, 17.23, -50, 60],
       ['Panama', 0.0, 0.041, 16.064, 0.023, -50, 40]
     ]
@@ -294,6 +294,7 @@ function MapBarChart({
           enabled: false
         },
         exporting: {
+          enabled: false,
           buttons: {
             contextButton: {
               menuItems: ['viewFullscreen', 'separator', 'downloadPNG', 'downloadPDF', 'separator', 'downloadCSV'],
@@ -431,7 +432,7 @@ function MapBarChart({
             name: 'Japan'
           }, {
             geometry: {
-              coordinates: [(174 - 11.31), 22],
+              coordinates: [(176 - 11.31), 22],
               type: 'Point'
             },
             dataLabels: {
@@ -442,7 +443,7 @@ function MapBarChart({
             name: 'Korea,<br />Republic of'
           }, {
             geometry: {
-              coordinates: [(198 - 11.31), -30],
+              coordinates: [(191 - 11.31), -30],
               type: 'Point'
             },
             dataLabels: {
@@ -450,7 +451,7 @@ function MapBarChart({
                 textAnchor: 'middle'
               }
             },
-            name: 'Marshall<br />Islands (the)'
+            name: 'Marshall<br />Islands'
           }],
           dataLabels: {
             style: {

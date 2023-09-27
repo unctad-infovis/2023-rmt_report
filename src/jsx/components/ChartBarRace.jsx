@@ -285,14 +285,14 @@ function BarRaceChart({
           fontFamily: 'Roboto',
           fontWeight: 400
         },
-        type: 'bar',
-        zoomType: 'x'
+        type: 'bar'
       },
       colors: ['#009edb'],
       credits: {
         enabled: false
       },
       exporting: {
+        enabled: false,
         buttons: {
           contextButton: {
             menuItems: ['viewFullscreen', 'separator', 'downloadPNG', 'downloadPDF', 'separator', 'downloadCSV'],
