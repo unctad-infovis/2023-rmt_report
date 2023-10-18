@@ -27,13 +27,13 @@ module.exports = merge(common, {
     ],
   },
   output: {
-    filename: 'js/' + name + '.[contenthash].min.js',
+    filename: 'js/' + name + '.min.js',
     path: path.resolve(__dirname, './public'),
     clean: true
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'css/' + name + '.[contenthash].min.css'
+      filename: 'css/' + name + '.min.css'
     })
   ]
 });

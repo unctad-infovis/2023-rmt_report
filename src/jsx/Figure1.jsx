@@ -23,7 +23,7 @@ function Figure1() {
   });
 
   useEffect(() => {
-    const data_file = `${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2023-rmt_report/' : './'}assets/data/2023-rmt_report_figure1_update.csv`;
+    const data_file = `${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2023-rmt_report/' : (window.location.href.includes('localhost:80')) ? './' : 'https://unctad-infovis.github.io/2023-rmt_report/'}assets/data/2023-rmt_report_figure1_update.csv`;
     try {
       fetch(data_file)
         .then((response) => {
