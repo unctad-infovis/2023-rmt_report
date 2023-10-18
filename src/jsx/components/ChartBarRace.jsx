@@ -399,7 +399,7 @@ function BarRaceChart({
         },
         reserveSpace: true,
         labels: {
-          formatter: (el) => `<img src="${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2023-rmt_report/' : './'}assets/img/flags/${countryCodes(el.value)}.png" class="flag" />`,
+          formatter: (el) => `<img src="${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2023-rmt_report/' : (window.location.href.includes('localhost:80')) ? './' : 'https://unctad-infovis.github.io/2023-rmt_report/'}assets/img/flags/${countryCodes(el.value)}.png" class="flag" />`,
           distance: 10,
           padding: 0,
           rotation: 0,
