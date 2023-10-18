@@ -68,7 +68,6 @@ module.exports = {
         { from: 'assets/data/UNWorldmap.geojson', to: '../public/assets/data/2023-UNWorldmap.geojson.json', noErrorOnMissing: true, globOptions: { dot: true, gitignore: true, ignore: ['**/.DS_Store'] }},
         { from: 'assets/data/Figure01 - data.csv', to: '../public/assets/data/2023-rmt_report_figure1_update.csv', noErrorOnMissing: true, globOptions: { dot: true, gitignore: true, ignore: ['**/.DS_Store'] }},
         { from: 'src/font/', to: '../public/font/', noErrorOnMissing: true, globOptions: { dot: true, gitignore: true, ignore: ['**/.DS_Store'] }},
-        { from: 'src/fonts/', to: '../public/fonts/', noErrorOnMissing: true, globOptions: { dot: true, gitignore: true, ignore: ['**/.DS_Store'] }},
         { from: './favicon.png', to: '../public', noErrorOnMissing: true, globOptions: { dot: true, gitignore: true, ignore: ['**/.DS_Store'] }}
       ]
     })

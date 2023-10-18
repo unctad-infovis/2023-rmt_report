@@ -130,13 +130,14 @@ Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
 function BarRaceChart({
   chart_height, data, idx, note, source, subtitle, title
 }) {
-  const chartRef = useRef();
   const startYear = 1980;
   const endYear = 2023;
-  const btn = document.getElementsByClassName('play_pause_button')[0];
-  const input = document.getElementsByClassName('play_range')[0];
   const nbr = 15;
   const chart = useRef();
+  const chartRef = useRef();
+  const chartContainerRef = useRef();
+  const btn = useRef();
+  const input = useRef();
   const [rangeValue, setRangeValue] = useState(0);
   const [chartDone, setChartDone] = useState(false);
   const [once, setOnce] = useState(false);
@@ -152,8 +153,8 @@ function BarRaceChart({
   }, [data]);
 
   const getSubtitle = useCallback(() => {
-    const total = (getData(input.value)[0][1]).toFixed(0);
-    return `<div class="year">${input.value}</div><br /><div class="total">${formatNr(total)} tonnes</div>`;
+    const total = (getData(input.current.value)[0][1]).toFixed(0);
+    return `<div class="year">${input.current.value}</div><br /><div class="total">${formatNr(total)} tonnes</div>`;
   }, [getData, input]);
 
   const xScale = d3.scaleLinear()
@@ -175,11 +176,10 @@ function BarRaceChart({
   }, [data, xScale, yScale]);
 
   const pause = useCallback(() => {
-    btn.title = 'play';
-    btn.className = 'fa fa-play  play_pause_button';
+    btn.current.innerHTML = '⏵︎';
     clearTimeout(chart.current.sequenceTimer);
     chart.current.sequenceTimer = undefined;
-  }, [btn]);
+  }, []);
 
   const updateChart = useCallback((year_idx) => {
     document.querySelectorAll('.meta_data .values')[0].innerHTML = getSubtitle();
@@ -197,17 +197,16 @@ function BarRaceChart({
   const togglePlay = useCallback(() => {
     const update = (increment) => {
       if (increment) {
-        input.value = parseInt(input.value, 10) + increment;
+        input.current.value = parseInt(input.current.value, 10) + increment;
       }
-      if (input.value >= endYear) {
+      if (input.current.value >= endYear) {
         pause(btn);
       }
-      setRangeValue(input.value);
-      updateChart(input.value);
+      setRangeValue(input.current.value);
+      updateChart(input.current.value);
     };
     const play = () => {
-      btn.title = 'pause';
-      btn.className = 'fa fa-pause  play_pause_button';
+      btn.current.innerHTML = '⏸︎';
       chart.current.sequenceTimer = setInterval(() => {
         update(1);
       }, 500);
@@ -215,9 +214,12 @@ function BarRaceChart({
     if (chart.current.sequenceTimer) {
       pause();
     } else {
+      if (input.current.value >= endYear) {
+        input.current.value = startYear;
+      }
       play();
     }
-  }, [pause, btn, input, updateChart]);
+  }, [pause, updateChart]);
 
   const changeYear = (event) => {
     pause();
@@ -384,7 +386,7 @@ function BarRaceChart({
           fontWeight: 700,
           lineHeight: '34px'
         },
-        text: `${`${title} in ${input.value}`}?`,
+        text: `${`${title} in ${input.current.value}`}?`,
         widthAdjust: -144,
         x: 100
       },
@@ -475,6 +477,8 @@ function BarRaceChart({
 
   useEffect(() => {
     if (isVisible === true) {
+      btn.current = chartContainerRef.current.querySelector('.play_pause_button');
+      input.current = chartContainerRef.current.querySelector('.play_range');
       setTimeout(() => {
         createChart();
         document.querySelectorAll('.meta_data .values')[0].innerHTML = getSubtitle();
@@ -493,9 +497,9 @@ function BarRaceChart({
   }, [createChart, getSubtitle, isVisible]);
 
   return (
-    <div className="chart_container" style={{ minHeight: chart_height, maxWidth: '700px' }}>
+    <div className="chart_container" style={{ minHeight: chart_height, maxWidth: '700px' }} ref={chartContainerRef}>
       <div className="play_controls">
-        <button type="button" className="fa fa-play play_pause_button" aria-label="Play Pause" title="play" onClick={(event) => togglePlay(event)} />
+        <button type="button" className="play_pause_button" aria-label="Play Pause" title="play" onClick={(event) => togglePlay(event)}>⏸︎</button>
         <input className="play_range" type="range" aria-label="Range" value={rangeValue} min={startYear} max={endYear} onInput={(event) => changeYear(event)} onChange={(event) => changeYear(event)} />
       </div>
       <div ref={chartRef}>
