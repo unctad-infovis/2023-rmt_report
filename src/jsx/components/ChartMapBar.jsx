@@ -432,7 +432,7 @@ function MapBarChart({
             name: 'Japan'
           }, {
             geometry: {
-              coordinates: [(176 - 11.31), 22],
+              coordinates: [(176 - 16.31), 22],
               type: 'Point'
             },
             dataLabels: {
