@@ -10,7 +10,7 @@ function Footer() {
             <div className="footer_content anchor_videos" id="anchor_videos">
               <h3>Watch the videos</h3>
               <div className="iframe_container youtube_iframe">
-                <iframe src="https://www.youtube.com/embed/NRFEuRqoR7U" title="Review of Maritime Transport Report" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                <iframe src="https://www.youtube.com/embed/NRFEuRqoR7U" title="Review of Maritime Transport Report" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
               </div>
               <ul>
                 <li>
@@ -54,7 +54,7 @@ function Footer() {
               </ul>
               <h4>Watch the press conference</h4>
               <div className="iframe_container youtube_iframe">
-                <iframe src="https://www.youtube.com/embed/SCk4Og6-uhE" title="Review of Maritime Transport Report Press Conference" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                <iframe src="https://www.youtube.com/embed/SCk4Og6-uhE" title="Review of Maritime Transport Report Press Conference" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
               </div>
               <ul>
                 <li>
@@ -65,7 +65,7 @@ function Footer() {
               </ul>
               <h4>Interview with Shamika N. Sirimanne, Director of UNCTAD&apos;s Technology and Logistics Division</h4>
               <div className="iframe_container youtube_iframe">
-                <iframe src="https://www.youtube.com/embed/IbVRtayUJoo" title="Interview with Shamika N. Sirimanne, Director of UNCTAD's Technology and Logistics Division" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                <iframe src="https://www.youtube.com/embed/IbVRtayUJoo" title="Interview with Shamika N. Sirimanne, Director of UNCTAD's Technology and Logistics Division" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
               </div>
               <ul>
                 <li>
@@ -76,7 +76,7 @@ function Footer() {
               </ul>
               <h4>Interview with Jan Hoffmann, Head of UNCTAD&apos;s Trade Logistics Branch</h4>
               <div className="iframe_container youtube_iframe">
-                <iframe src="https://www.youtube.com/embed/RD57SmYtYG4" title="Interview with Jan Hoffmann, Head of UNCTAD's Trade Logistics Branch" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                <iframe src="https://www.youtube.com/embed/RD57SmYtYG4" title="Interview with Jan Hoffmann, Head of UNCTAD's Trade Logistics Branch" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
               </div>
               <ul>
                 <li>
